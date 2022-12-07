@@ -1,7 +1,49 @@
 ﻿@page "/"
+@inject IFirebaseService db
+@implements IDisposable
 
-<h1>Hello, world!</h1>
+@code{
+    List<Wrapper<UserModel>> userList = new List<Wrapper<UserModel>>();
+    protected override async Task OnInitializedAsync()
+    {
+        var rs = new ObservableCollection<UserModel>();
+        
+        userList = await db.GetListAsync<UserModel>();
+        await InvokeAsync(StateHasChanged);
+    }
+    public void Dispose()
+    {
+        db.Dispose();
+    } 
+    async Task AddItem()
+    {
+        var rs = await db.AddItemAsync(model);
+        if (!string.IsNullOrEmpty(rs))
+            model = new UserModel();
+        userList = await db.GetListAsync<UserModel>();
+    }
+    async Task Delete(string key)
+    {
+        await db.DeleteItemAsync<UserModel>(key);
+        userList = await db.GetListAsync<UserModel>();
+    }
 
-Welcome to your new app.
+    UserModel model = new();
+}
+<div class="row">
+    <div class="col-md-5 flex-wrap pb-5">
+        <EditForm OnValidSubmit="AddItem" Model="model">
+            <DataAnnotationsValidator />
+            <MudTextField FullWidth="false" Label="First Name" T="string" @bind-Value="@model.FirstName" Variant="Variant.Outlined" />
+            <MudTextField FullWidth="false" Label="Last Name" T="string" @bind-Value="@model.LastName" Variant="Variant.Outlined" />
+            <MudButton Class="mt-2" ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small">Save</MudButton>
+        </EditForm>
+    </div>
+</div>
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+<ul>
+    @foreach (var i in userList)
+    {
+        <li>@i.Object.FirstName @i.Object.LastName <MudIconButton OnClick="@(()=> Delete(i.Key))" Size="Size.Small" Icon="@Icons.Rounded.Close" Color="Color.Error"/></li>
+    }
+</ul>

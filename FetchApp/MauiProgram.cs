@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components.WebView.Maui;
 using FetchApp.Data;
+using MudBlazor.Services;
 
 namespace FetchApp;
 
@@ -23,8 +24,10 @@ public static class MauiProgram
 		builder.Services.AddSingleton<WeatherForecastService>();
 
 		builder.Services.AddSingleton<IFirebaseService, FirebaseService>();
-		builder.Services.AddSingleton<IDataHandler, DataHandler>();
-
-		return builder.Build();
+		builder.Services.AddMudServices(opt =>
+		{
+			opt.SnackbarConfiguration.VisibleStateDuration = 2;
+		});
+        return builder.Build();
 	}
 }
