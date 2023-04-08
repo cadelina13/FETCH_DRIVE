@@ -9,5 +9,8 @@ namespace Fetch.App.Data
             : base(options)
         {
         }
+        public DbSet<BookingModel> Bookings { get; set; }
+        public DbSet<LocationModel> Locations { get; set; }
+
     }
 }

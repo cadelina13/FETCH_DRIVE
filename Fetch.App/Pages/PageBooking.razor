@@ -1,0 +1,18 @@
+﻿@page "/booking"
+@code {
+    private ElementReference mapContainer;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await jsRuntime.InvokeVoidAsync("initMap", mapContainer);
+        }
+    }
+
+    [JSInvokable]
+    public static void MapInitialized()
+    {
+        Console.WriteLine("Map initialized!");
+    }
+}
