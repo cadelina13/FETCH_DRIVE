@@ -5,9 +5,12 @@
     public IJSRuntime jsRuntime { get; set; }
     public ElementReference mapContainer;
 
+    public static string start_address { get; set; }
+    public static string end_address { get; set; }
+
+    System.Timers.Timer timer = new System.Timers.Timer();
     protected override async Task OnInitializedAsync()
     {
-
 
     }
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -18,12 +21,38 @@
             var source_longitude = await localdb.GetItemAsync<double>("source_longitude");
 
             await jsRuntime.InvokeVoidAsync("setDestinationMapLocation", mapContainer, source_latitude, source_longitude);
+            initTimer();
+
         }
     }
+
+    void initTimer()
+    {
+        timer = new System.Timers.Timer();
+        timer.Interval = 1000;
+        timer.Elapsed += async (s, e) =>
+        {
+            await InvokeAsync(StateHasChanged);
+            timer.EndInit();
+            timer.Stop();
+            timer.Dispose();
+            initTimer();
+        };
+    }
+
 
     async Task GetRouteClick()
     {
         await jsRuntime.InvokeVoidAsync("getRoute");
+        timer.Start();
+
+        await InvokeAsync(StateHasChanged);
+    }
+    [JSInvokable("DestinationResultMethodAsync")]
+    public static void DestinationResultMethodAsync(string[] strArray)
+    {
+        start_address = strArray[0];
+        end_address = strArray[1];
     }
 }
 
@@ -36,5 +65,17 @@
         </p>
     </div>
     <div class="col-md-6">
+        <dl>
+            <dt>Pick up location</dt>
+            @if (!string.IsNullOrEmpty(start_address))
+            {
+                <dd>@start_address</dd>
+            }
+            <dt>Drop off location</dt>
+            @if (!string.IsNullOrEmpty(end_address))
+            {
+                <dd>@end_address</dd>
+            }
+        </dl>
     </div>
 </div>

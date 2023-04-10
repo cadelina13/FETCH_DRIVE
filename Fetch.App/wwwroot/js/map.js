@@ -6,7 +6,7 @@ function initMap(mapContainer) {
         center: { lat: 37.7749, lng: -122.4194 },
         zoom: 8
     });
-    DotNet.invokeMethodAsync('Fetch.App', 'MapInitialized');
+    //DotNet.invokeMethodAsync('Fetch.App', 'MapInitialized');
 }
 
 function getRoute() {
@@ -24,9 +24,14 @@ function getRoute() {
     };
     directionsService.route(request, function (result, status) {
         if (status == 'OK') {
-            alert(JSON.stringify(result));
             directionsRenderer.setDirections(result);
             marker.setMap(null);
+            var strArray = ["", ""];
+            for (var i = 0; i < result['routes'].length; i++) {
+                strArray[0] = result['routes'][i].legs[0].start_address;
+                strArray[1] = result['routes'][i].legs[0].end_address;
+            }
+            DotNet.invokeMethodAsync('Fetch.App', 'DestinationResultMethodAsync', strArray);
         }
     });
 }
@@ -44,8 +49,11 @@ function setDestinationMapLocation(mapContainer, _lat, _lng) {
         map,
         title: "Destination",
     });
+    marker.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png');
+
     google.maps.event.addListener(map, 'drag', function () {
         marker.setPosition(map.getCenter());
+        marker.setMap(map);
     });
 
     google.maps.event.addListener(map, 'dragend', function () {
@@ -55,6 +63,8 @@ function setDestinationMapLocation(mapContainer, _lat, _lng) {
     google.maps.event.addListener(map, 'zoom_changed', function () {
         marker.setPosition(map.getCenter());
         saveDestinationLocation(marker.getPosition());
+        marker.setMap(map);
+
     });
     google.maps.event.addListener(map, 'mousemove', function () {
         marker.setPosition(map.getCenter());
@@ -64,6 +74,8 @@ function setDestinationMapLocation(mapContainer, _lat, _lng) {
 }
 
 function getLocation(mapContainer) {
+    directionsRenderer = new google.maps.DirectionsRenderer();
+    directionsService = new google.maps.DirectionsService();
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function (position) {
             var _lat = position.coords.latitude;
@@ -79,9 +91,12 @@ function getLocation(mapContainer) {
                 map,
                 title: "You",
             });
+            marker.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png')
 
             google.maps.event.addListener(map, 'drag', function () {
                 marker.setPosition(map.getCenter());
+                marker.setMap(map);
+
             });
 
             google.maps.event.addListener(map, 'dragend', function () {
@@ -91,6 +106,8 @@ function getLocation(mapContainer) {
             google.maps.event.addListener(map, 'zoom_changed', function () {
                 marker.setPosition(map.getCenter());
                 saveSourceLocation(marker.getPosition());
+                marker.setMap(map);
+
             });
             google.maps.event.addListener(map, 'mousemove', function () {
                 marker.setPosition(map.getCenter());

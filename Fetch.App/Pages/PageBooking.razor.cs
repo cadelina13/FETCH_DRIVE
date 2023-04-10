@@ -19,10 +19,15 @@ namespace Fetch.App.Pages
             }
         }
 
-        [JSInvokable]
+        [JSInvokable("DestinationResultMethod")]
         public static void MapInitializedAsync()
         {
             Console.WriteLine("Map initialized!");
+        }
+
+        async void NextClick()
+        {
+            nav.NavigateTo("/booking/dropoff");
         }
     }
 }
