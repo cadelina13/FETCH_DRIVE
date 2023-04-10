@@ -6,7 +6,8 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
-
+using Blazored;
+using Blazored.LocalStorage;
 namespace Fetch.App
 {
     public class Program
@@ -41,7 +42,7 @@ namespace Fetch.App
             builder.Services.AddServerSideBlazor();
             builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
             builder.Services.AddSingleton<WeatherForecastService>();
-
+            builder.Services.AddBlazoredLocalStorage();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

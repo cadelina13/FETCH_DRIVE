@@ -1,0 +1,40 @@
+﻿@page "/booking/dropoff"
+
+@code {
+    [Inject]
+    public IJSRuntime jsRuntime { get; set; }
+    public ElementReference mapContainer;
+
+    protected override async Task OnInitializedAsync()
+    {
+
+
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var source_latitude = await localdb.GetItemAsync<double>("source_latitude");
+            var source_longitude = await localdb.GetItemAsync<double>("source_longitude");
+
+            await jsRuntime.InvokeVoidAsync("setDestinationMapLocation", mapContainer, source_latitude, source_longitude);
+        }
+    }
+
+    async Task GetRouteClick()
+    {
+        await jsRuntime.InvokeVoidAsync("getRoute");
+    }
+}
+
+<div class="row">
+    <div class="col-md-6">
+        <h3>Drop off location</h3>
+        <div style="height:500px;width:100%;border-radius:10px" @ref="mapContainer"></div>
+        <p class="text-end">
+            <button @onclick="GetRouteClick" class="btn btn-sm btn-primary mt-3">Choose destination</button>
+        </p>
+    </div>
+    <div class="col-md-6">
+    </div>
+</div>
