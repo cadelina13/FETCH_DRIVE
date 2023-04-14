@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "Fetch.Web": {
+    "DEV": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {

@@ -1,0 +1,52 @@
+﻿@code {
+    [Parameter]
+    public string Name { get; set; }
+    [Parameter]
+    public string Icon { get; set; }
+    [Parameter]
+    public string Link { get; set; }
+
+    Color btnColor = Color.Dark;
+
+    protected override void OnInitialized()
+    {
+        System.Timers.Timer t = new System.Timers.Timer(100);
+        t.Enabled = true;
+        t.Elapsed += (e, o) =>
+        {
+            ChangeButtonColor();
+            t.Stop();
+            t.Dispose();
+        };
+        t.Start();
+        nav.LocationChanged += (o, e) =>
+        {
+            ChangeButtonColor();
+        };
+    }
+    void ChangeButtonColor()
+    {
+        if (Link == nav.Uri)
+        {
+            btnColor = Color.Primary;
+        }
+        else
+        {
+            btnColor = Color.Dark;
+        }
+        InvokeAsync(StateHasChanged);
+    }
+    private void OnClick()
+    {
+        nav.NavigateTo(Link);
+    }
+}
+
+<MudButton OnClick="OnClick" Class="text-capitalize" Variant="Variant.Text">
+    <div class="d-flex flex-column">
+        <div class="d-flex justify-content-center">
+            <MudIcon Size="Size.Small" Color="@btnColor" Icon="@Icon" />
+        </div>
+        <small style="font-size:11px;" class="text-dark text-center">@Name</small>
+    </div>
+</MudButton>

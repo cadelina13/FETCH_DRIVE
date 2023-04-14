@@ -1,0 +1,16 @@
+﻿@page "/booking"
+
+<div class="row">
+    <div class="col-md-6">
+        <p class="d-flex align-items-center p-1">
+            <MudIcon Class="mr-1" Size="Size.Small" Color="Color.Primary" Icon="@Icons.Material.Filled.LocationOn"/>
+            <MudText Inline Class="fw-bold" Typo="Typo.body1" Color="Color.Primary">Pick up location</MudText>
+        </p>
+        <div style="height:400px;width:100%;border-radius:10px" @ref="mapContainer"></div>
+        <p class="text-end">
+            <MudButton OnClick="NextClick" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.NavigateNext">Next</MudButton>
+        </p>
+    </div>
+    <div class="col-md-6">
+    </div>
+</div>

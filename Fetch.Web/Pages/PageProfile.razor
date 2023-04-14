@@ -1,0 +1,62 @@
+﻿@page "/profile"
+
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+
+@inject NavigationManager Navigation
+@inject SignOutSessionStateManager SignOutManager
+
+@code {
+
+    async void SignOut()
+    {
+        var msg = await dialog.ShowMessageBox("Sign Out", "You are about to end your session. Are you sure?", yesText: "Sign Out", noText: "Cancel");
+        if(msg.HasValue && msg.Value)
+        {
+            await SignOutManager.SetSignOutState();
+            Navigation.NavigateTo("authentication/logout");
+        }
+        
+    }
+}
+
+
+<AuthorizeView>
+    <Authorized>
+        <MudContainer MaxWidth="MaxWidth.ExtraSmall">
+            @{
+                var userId = context.User.Claims.ToArray()[1].Value;
+                var imgLink = context.User.Claims.ToArray()[3].Value;
+                var firstName = context.User.Claims.ToArray()[4].Value;
+                var lastName = context.User.Claims.ToArray()[5].Value;
+            }
+            <MudPaper Outlined Class="text-center mt-5 p-3">
+                <img src="@imgLink" class="img-fluid mb-2" style="border-radius:50%"/>
+                <MudText Class="mb-5" Typo="Typo.h5">@firstName @lastName</MudText>
+                
+            </MudPaper>
+            <MudNavMenu Class="p-0 mt-3">
+                <MudNavLink OnClick="SignOut" Match="NavLinkMatch.Prefix">
+                    <MudText Inline Typo="Typo.body1">Sign Out</MudText>
+                    <MudIcon Icon="@Icons.Rounded.ArrowForwardIos" Color="Color.Dark" Size="Size.Small" Class="float-end" />
+                </MudNavLink>
+            </MudNavMenu>
+        </MudContainer>
+    </Authorized>
+    <NotAuthorized>
+        <MudContainer Class="pt-5" MaxWidth="MaxWidth.ExtraSmall">
+            <MudPaper Class="p-3 text-center" Outlined>
+                <MudText Color="Color.Primary" Typo="Typo.body1" Class="mb-3">Sign in with</MudText>
+                <MudButton Link="authentication/login" FullWidth Class="mb-4" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Large" StartIcon="@Icons.Custom.Brands.Google">
+                    Google
+                </MudButton>
+                <MudButton Disabled FullWidth Class="mb-4" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Large" StartIcon="@Icons.Custom.Brands.Facebook">
+                    Facebook
+                </MudButton>
+                <MudButton Disabled FullWidth Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Large" StartIcon="@Icons.Custom.Brands.Microsoft">
+                    Microsoft
+                </MudButton>
+                </MudPaper>
+        </MudContainer>
+    </NotAuthorized>
+</AuthorizeView>

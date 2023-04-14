@@ -1,4 +1,12 @@
-﻿<CascadingAuthenticationState>
+﻿<MudSnackbarProvider />
+<MudDialogProvider FullWidth="true"
+                   DisableBackdropClick="false"
+                   CloseButton="false"
+                   Position="DialogPosition.Center" />
+<MudThemeProvider Theme="@_theme" />
+
+
+<CascadingAuthenticationState>
     <Router AppAssembly="@typeof(App).Assembly">
         <Found Context="routeData">
             <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
@@ -23,3 +31,12 @@
         </NotFound>
     </Router>
 </CascadingAuthenticationState>
+@code{
+    MudTheme _theme = new MudTheme()
+        {
+            Palette = new Palette
+            {
+                AppbarBackground = "#ffffff"
+            }
+        };
+}

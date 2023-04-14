@@ -1,18 +1,25 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
 
-    <main>
-        <div class="top-row px-4 auth">
-            <LoginDisplay />
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-        </div>
-
-        <article class="content px-4">
+<MudLayout>
+    <MudContainer Style="height:93vh;margin:0;padding:0;overflow-x:hidden;">
+        <div style="padding-bottom:15vh;">
             @Body
-        </article>
-    </main>
-</div>
+        </div>
+        <MudScrollToTop Style="margin-bottom:7vh;">
+            <MudFab Size="Size.Small" Color="Color.Primary" StartIcon="@Icons.Material.Filled.ArrowUpward" />
+        </MudScrollToTop>
+    </MudContainer>
+    <_BottomNavBar />
+</MudLayout>
+@code {
+    
+
+    bool _drawerOpen = true;
+
+    void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+
+}
