@@ -8,13 +8,14 @@ namespace Fetch.Web.Pages
     {
         [Inject]
         public IJSRuntime jsRuntime { get; set; }
+    public ElementReference searchBoxContainer;
         public ElementReference mapContainer;
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
             {
-               // await jsRuntime.InvokeVoidAsync("initMap", mapContainer);
-                await jsRuntime.InvokeVoidAsync("getLocation", mapContainer);
+                // await jsRuntime.InvokeVoidAsync("initMap", mapContainer);
+                await jsRuntime.InvokeVoidAsync("getLocation", mapContainer, searchBoxContainer);
                 await InvokeAsync(StateHasChanged);
             }
         }

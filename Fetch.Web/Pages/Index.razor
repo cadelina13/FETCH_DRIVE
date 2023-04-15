@@ -1,5 +1,12 @@
 ﻿@page "/"
+@code{
 
+    async void DialogBookingClick()
+    {
+        var d = await dialog.Show<DialogBooking>("Pin your location", new DialogOptions() { MaxWidth = MaxWidth.ExtraExtraLarge, FullWidth = true, CloseButton = true, DisableBackdropClick = false }).Result;
+
+    }
+}
 <PageTitle>Index</PageTitle>
 
 <MudContainer Class="pt-2" MaxWidth="MaxWidth.ExtraSmall">

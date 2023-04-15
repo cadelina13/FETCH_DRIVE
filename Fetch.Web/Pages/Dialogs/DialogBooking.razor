@@ -1,0 +1,44 @@
+﻿@code {
+    [CascadingParameter] MudDialogInstance _mudDialog { get; set; }
+
+    [Inject]
+    public IJSRuntime jsRuntime { get; set; }
+    public ElementReference mapContainer;
+    public ElementReference searchBoxContainer;
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // await jsRuntime.InvokeVoidAsync("initMap", mapContainer);
+            await jsRuntime.InvokeVoidAsync("getLocation", mapContainer, searchBoxContainer);
+            _mudDialog.SetOptions(new DialogOptions() { MaxWidth = MaxWidth.ExtraExtraLarge, CloseButton = true, DisableBackdropClick = true, FullWidth = true, FullScreen = true });
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    [JSInvokable("DestinationResultMethod")]
+    public static void MapInitializedAsync()
+    {
+        Console.WriteLine("Map initialized!");
+    }
+
+    async void NextClick()
+    {
+        nav.NavigateTo("/booking/dropoff");
+    }
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <input @ref="searchBoxContainer" id="pac-input"
+               class="controls"
+               type="text"
+               placeholder="Search places here..." />
+        <div id="map" style="height:60vh;width:100%;" @ref="mapContainer"></div>
+        <p class="text-end">
+            <button @onclick="NextClick" class="btn btn-sm btn-primary mt-3">Next</button>
+        </p>
+    </div>
+    <div class="col-md-6">
+    </div>
+</div>
